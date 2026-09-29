@@ -1,29 +1,42 @@
 # lexic analiser
 
-def IsLetter():
-    pass
+def GetLetter(char: str) -> bool:
+    return char.isalpha()
 
-def IsDigit():
-    pass
+def GetDigit(char: str) -> bool:
+    return char.isdecimal()
 
-def IsIdent():
-    pass
+def GetIdent(char: int, charList: list[str]) -> int:
+    if GetLetter(charList[char]):
+        char += 1
+        while GetLetter(charList[char]) or GetDigit(charList[char]):
+            char += 1
+    else:
+        return False
+    return True
 
-def IsEmpty():
-    pass
+def GetEmpty(char: int, charList: list[str]) -> int:
+    if charList[char] == ' ' or charList[char] == '\t' or charList[char] == '\n':
+        char += 1
+    return char
 
-def IsOther():
-    pass
 
-def Compiler(codeEntry):
-    code = codeEntry.read()
+def Compiler(code:str):
     charList = list(code)
     tokensList = []
-    print(charList)
-    for _ in range(len(charList)):
-        print(1)
+    currentCharIndex = 0
+    while currentCharIndex < len(charList):
+        if GetIdent(currentCharIndex, charList):
+            tokensList.append("IDENT")
+
+        elif GetEmpty(currentCharIndex, charList):
+            pass
+
+        else:
+            tokensList.append("OTHER")
+    return tokensList
 
 if __name__ == "__main__":
-    with open("compilerEntrance.txt") as codeEntry:
-        tokenizedEntry = Compiler(codeEntry)
-    print(tokenizedEntry)
+    with open("compilerEntrance.txt") as Entry:
+        code = Entry.read()
+    print(Compiler(code))
